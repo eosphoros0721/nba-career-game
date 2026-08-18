@@ -1,140 +1,124 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="theme-color" content="#0a0d13" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090c12">
 <title>NBA 路人王 · Street King</title>
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="v5.css?v=5">
 </head>
 <body>
-<div class="app">
-  <header class="hero">
-    <div class="brand">STREET KING</div>
-    <h1>NBA 路人王</h1>
-    <p>从18岁开始，把你捏出来的球员放进历史级街头赛场。</p>
+<div class="app-shell">
+  <header class="topbar">
+    <div><div class="brand">STREET KING</div><h1>NBA 路人王</h1></div>
+    <button id="homeBtn" class="icon-btn hidden" aria-label="主菜单">⌂</button>
   </header>
 
   <main>
     <section id="screen-menu" class="screen active">
+      <div class="hero-card">
+        <div class="hero-kicker">15 EDITIONS · ONE FIXED FIELD</div>
+        <h2>一条街，十五届赛事。</h2>
+        <p>每次新开生涯只随机一次参赛名单。此后这16个人会从18岁一路打到第15届，刷新页面也不会换人；只有你主动“新开生涯”才会重新 Roll。</p>
+      </div>
+      <div id="continueBox" class="card hidden"></div>
       <div class="menu-grid">
-        <button class="mode-card" data-open="single-build">
-          <span class="mode-kicker">SOLO CAREER</span>
-          <b>单人闯关</b>
-          <small>构建球员 → 每年16强淘汰赛 → 冠亚季军 → 退役榜单与生涯传记</small>
-        </button>
-        <button class="mode-card" data-open="multi-setup">
-          <span class="mode-kicker">FRIEND CAREER</span>
-          <b>多人对战</b>
-          <small>把朋友的自建角色加入同一历史球员池，随机在任何轮次相遇</small>
-        </button>
+        <button class="menu-card" id="newSoloBtn"><span>SOLO</span><b>单人闯关</b><small>自建球员 → 固定16人参赛池 → 15届淘汰赛 → 休赛期成长 → 历史榜单</small></button>
+        <button class="menu-card" id="newMultiBtn"><span>MULTI</span><b>多人对战</b><small>把朋友的自建角色加入同一固定球员池，整个生涯随机相遇</small></button>
       </div>
-      <div class="card rules-mini">
-        <b>这一版的核心</b>
-        <p>不是比总评。速度、力量、身材、投射、防守、性格、年龄状态和当届随机手感都会改变每场比赛。</p>
-      </div>
+      <div class="card small-note">比赛、对话与剧情均为架空游戏模拟。球员对白是夸张化创作，不代表本人真实言论或真实行为。</div>
     </section>
 
     <section id="screen-build" class="screen">
-      <div class="screen-head"><button class="back" data-back>←</button><div><span>PLAYER BUILDER</span><h2>构建你的街头球员</h2></div></div>
+      <div class="screen-title"><button class="back-btn" data-back>←</button><div><span>PLAYER BUILDER</span><h2>构建你的球员</h2></div></div>
       <div class="card">
-        <div class="form-grid identity-grid">
-          <div><label>球员姓名</label><input id="pName" maxlength="20" placeholder="输入名字" autocomplete="off"></div>
+        <div class="identity-grid">
+          <div><label>姓名</label><input id="pName" maxlength="20" placeholder="输入姓名" autocomplete="off"></div>
           <div><label>球衣号码</label><input id="pNumber" type="number" min="0" max="99" placeholder="0-99"></div>
           <div><label>位置</label><select id="pPos"><option>PG</option><option>SG</option><option>SF</option><option>PF</option><option>C</option></select></div>
           <div><label>身高</label><select id="pHeight"></select></div>
           <div><label>体重</label><select id="pWeight"></select></div>
-          <div><label>性格模板</label><select id="pPersonality"></select></div>
+          <div><label>性格</label><select id="pPersonality"></select></div>
         </div>
-        <div id="personalityDesc" class="personality-desc"></div>
+        <div id="personalityText" class="info-strip"></div>
       </div>
-
-      <div class="card sticky-budget">
-        <div><span class="eyebrow">BUILD BUDGET</span><b id="budgetText">0 / 39</b></div>
-        <div class="budget-track"><i id="budgetBar"></i></div>
-        <small>12项能力。每项1–5分；高档模板更贵。目标是“中上游强者”，不是全99。</small>
+      <div class="card budget-card">
+        <div class="budget-head"><span>BUILD BUDGET</span><b id="budgetText">0 / 39</b></div>
+        <div class="budget-track"><i id="budgetFill"></i></div>
+        <p>12项能力，每项1–5档；每个分档至少3名球员模板。高档越多，其他地方就必须让步。</p>
       </div>
-
-      <div id="skillBuilder" class="skills"></div>
-
-      <div class="card build-summary" id="buildSummary"></div>
-      <button class="primary" id="lockBuildBtn">锁定球员 · 进入18岁路人王</button>
+      <div id="skillBuilder" class="skill-list"></div>
+      <div id="buildPreview" class="card"></div>
+      <button id="lockBuildBtn" class="primary">锁定球员并生成本次参赛名单</button>
     </section>
 
     <section id="screen-multi" class="screen">
-      <div class="screen-head"><button class="back" data-back>←</button><div><span>MULTIPLAYER</span><h2>把朋友放进同一条街</h2></div></div>
-      <div class="card">
-        <h3>你的球员</h3>
-        <p class="muted">多人模式仍然先使用你的自建球员。没有角色时先去构建。</p>
-        <div id="multiSelfPreview"></div>
-        <button class="secondary" id="multiBuildBtn">去构建 / 修改我的球员</button>
-      </div>
-      <div class="card">
-        <h3>导入朋友角色码</h3>
-        <textarea id="friendCode" placeholder="粘贴朋友的 SK2-... 角色码"></textarea>
-        <button class="secondary" id="loadFriendBtn">读取角色码</button>
-        <div id="friendPreview"></div>
-      </div>
-      <div class="card">
-        <h3>共同赛事码</h3>
-        <p class="muted">双方输入完全相同的赛事码，再互换角色码。抽签和比赛随机种子就会一致。</p>
-        <input id="sharedSeed" maxlength="20" placeholder="例如 STREET2026">
-        <button class="secondary" id="generateSeedBtn">随机生成赛事码</button>
-      </div>
-      <button class="primary" id="startMultiBtn">开始双人路人王生涯</button>
+      <div class="screen-title"><button class="back-btn" data-back>←</button><div><span>MULTIPLAYER</span><h2>导入朋友</h2></div></div>
+      <div class="card"><h3>你的球员</h3><div id="multiSelf"></div><button id="multiBuildBtn" class="secondary">创建 / 修改我的球员</button></div>
+      <div class="card"><h3>朋友角色码</h3><textarea id="friendCode" placeholder="粘贴 SK5-... 角色码"></textarea><button id="loadFriendBtn" class="secondary">读取朋友角色</button><div id="friendPreview"></div></div>
+      <div class="card"><h3>共同赛事码</h3><p class="muted">用于固定本次16人球员池和每年的抽签。双方使用相同赛事码与双方角色码时，初始世界一致。</p><input id="sharedSeed" maxlength="24" placeholder="例如 STREET-0721"><button id="randomSeedBtn" class="secondary">随机生成</button></div>
+      <button id="startMultiBtn" class="primary">锁定16人名单并开始</button>
+    </section>
+
+    <section id="screen-field" class="screen">
+      <div class="screen-title"><button class="back-btn" data-back>←</button><div><span>CAREER FIELD</span><h2>本次15届固定参赛名单</h2></div></div>
+      <div class="card highlight"><p>以下16人一旦确认，整个生涯不再变化。每一年只会重新抽签，不会重新抽参赛者。</p></div>
+      <div class="card"><div class="title-row"><h3>本次入选16人</h3><span id="fieldSeedLabel" class="pill"></span></div><div id="selectedField" class="roster-grid"></div></div>
+      <div class="card"><details><summary>查看完整候选球员池</summary><div id="candidatePool" class="candidate-list"></div></details></div>
+      <div id="playerCodeBox" class="card hidden"></div>
+      <button id="startCareerBtn" class="primary">进入18岁 · 第1届路人王</button>
     </section>
 
     <section id="screen-career" class="screen">
-      <div class="screen-head"><button class="back" id="careerMenuBtn">⌂</button><div><span id="careerModeLabel">SOLO CAREER</span><h2 id="careerTitle">18岁 · 路人王</h2></div><div class="career-crowns">🏆 <b id="crownCount">0</b></div></div>
+      <div class="career-header">
+        <div><span id="editionLabel" class="eyebrow"></span><h2 id="careerTitle"></h2><div id="careerRecord" class="muted"></div></div>
+        <div class="health-badge">身体 <b id="healthText">100</b></div>
+      </div>
+      <div class="card"><div class="title-row"><div><span class="eyebrow">TOURNAMENT</span><h3>本届签表</h3></div><span id="stageLabel" class="pill"></span></div><div class="bracket-scroll"><div id="bracket" class="bracket"></div></div><div id="bronzeInfo"></div></div>
+      <div id="storyCard" class="card"><span class="eyebrow">COURTSIDE STORY</span><h3 id="storyHeading"></h3><div id="storyBody" class="story"></div><button id="startMatchBtn" class="primary">开始比赛</button></div>
 
-      <div class="card season-status" id="seasonStatus"></div>
-
-      <div class="card bracket-card">
-        <div class="card-title-row"><div><span class="eyebrow">TOURNAMENT</span><h3>本届16强对阵</h3></div><span id="tournamentStage" class="stage-pill">16强</span></div>
-        <div class="bracket-scroll"><div id="bracket" class="bracket"></div></div>
-        <div id="bronzeBox" class="bronze-box"></div>
+      <div id="liveCard" class="card hidden">
+        <div class="live-head"><div><span class="eyebrow">LIVE</span><h3 id="liveMatchTitle"></h3></div><div class="live-score"><b id="scoreA">0</b><span>:</span><b id="scoreB">0</b></div></div>
+        <div class="court-wrap">
+          <div class="court">
+            <div class="half-circle"></div><div class="paint"></div><div class="rim"></div><div class="three-arc"></div>
+            <div id="dotA" class="player-dot dot-a"><span></span></div>
+            <div id="dotB" class="player-dot dot-b"><span></span></div>
+            <div id="ball" class="ball"></div>
+          </div>
+        </div>
+        <div class="speed-row"><span>观赛速度</span><button class="speed-btn active" data-speed="1">1×</button><button class="speed-btn" data-speed="2">2×</button></div>
+        <div id="liveLog" class="live-log"></div>
       </div>
 
-      <div class="card story-card" id="storyCard">
-        <span class="eyebrow">COURTSIDE STORY</span>
-        <h3 id="storyHeading">赛前</h3>
-        <div id="storyBody" class="story-body"></div>
-        <button class="primary" id="playRoundBtn">开始比赛</button>
-      </div>
+      <div id="resultCard" class="card hidden"><div id="matchResult"></div><button id="continueBtn" class="primary">继续</button></div>
+      <div class="card"><div class="title-row"><h3>历年成绩</h3><span id="careerAgeRange" class="muted"></span></div><div id="historyList"></div></div>
+    </section>
 
-      <div class="card hidden" id="resultCard">
-        <div id="matchResult"></div>
-        <button class="primary" id="continueBtn">继续</button>
-      </div>
-
-      <div class="card">
-        <div class="card-title-row"><div><span class="eyebrow">CAREER LOG</span><h3>历年战绩</h3></div><span id="retireAgeLabel"></span></div>
-        <div id="careerHistory"></div>
-      </div>
+    <section id="screen-offseason" class="screen">
+      <div class="screen-title"><div><span>OFFSEASON</span><h2 id="offseasonTitle"></h2></div></div>
+      <div class="card"><div class="title-row"><h3>当前能力</h3><span id="compText" class="pill"></span></div><div id="offseasonAttrs" class="attr-grid"></div><div id="templateCompare" class="template-compare"></div></div>
+      <div class="card"><h3>休赛期选择</h3><p class="muted">年龄自然变化会先发生，再叠加你的训练选择。导师训练会逐渐改变你的出手倾向。</p><div id="offseasonChoices" class="choice-grid"></div></div>
+      <div id="retireChoiceBox" class="card hidden"></div>
     </section>
 
     <section id="screen-retire" class="screen">
-      <div class="screen-head"><button class="back" id="retireMenuBtn">⌂</button><div><span>LEGACY</span><h2>街头生涯落幕</h2></div></div>
-      <div class="card" id="legacySummary"></div>
-      <div class="card">
-        <span class="eyebrow">ALL-TIME STREET RANKING</span><h3>街头历史榜</h3>
-        <div id="leaderboard"></div>
-      </div>
-      <div class="card">
-        <span class="eyebrow">STORY</span><h3>你的街头生涯</h3>
-        <div id="careerNarrative" class="story-body"></div>
-      </div>
-      <button class="primary" id="restartBtn">回主菜单</button>
+      <div class="screen-title"><button id="retireHomeBtn" class="back-btn">⌂</button><div><span>LEGACY</span><h2>十五届之后，街头留下了什么</h2></div></div>
+      <div id="legacySummary" class="card"></div>
+      <div class="card"><span class="eyebrow">ALL-TIME RANKING</span><h3>最终街头榜</h3><div id="leaderboard"></div></div>
+      <div class="card"><span class="eyebrow">CAREER STORY</span><h3>生涯解说</h3><div id="careerNarrative" class="story long-story"></div></div>
+      <button id="newCareerFromRetire" class="primary">新开一条时间线</button>
     </section>
   </main>
 
-  <footer>非官方同人娱乐模拟 · 球员性格与对白为夸张化游戏创作，不代表本人真实言论。</footer>
+  <footer>架空篮球游戏 · 非官方 NBA 产品。涉及争议动作、冲突和对白均为游戏化虚构事件。</footer>
 </div>
 <div id="toast" class="toast hidden"></div>
-<script src="data.js?v=3"></script>
-<script src="app-1.js?v=3"></script>
-<script src="app-2.js?v=3"></script>
-<script src="app-3.js?v=3"></script>
-<script src="app-4.js?v=3"></script>
+<script src="data.js?v=5"></script>
+<script src="v5-data.js?v=5"></script>
+<script src="v5-core.js?v=5"></script>
+<script src="v5-game.js?v=5"></script>
+<script src="v5-career.js?v=5"></script>
+<script src="v5-ui.js?v=5"></script>
 </body>
 </html>
