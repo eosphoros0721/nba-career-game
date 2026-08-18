@@ -3,59 +3,135 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="theme-color" content="#0b0d12" />
+<meta name="theme-color" content="#0a0d13" />
 <title>NBA 路人王 · Street King</title>
-<link rel="stylesheet" href="styles.css?v=1">
+<link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
-<div class="wrap">
-  <div class="hero"><span class="pill">V1 · 本地确定性模拟</span><h1>🏀 NBA 路人王 · Street King</h1><p>捏一个只属于你的球员，用角色码和朋友对战；18岁起，每一岁冲一次历史路人王。</p></div>
-  <div class="tabs"><button class="tab active" data-tab="build">捏球员</button><button class="tab" data-tab="career">路人王生涯</button><button class="tab" data-tab="battle">好友 / 街头战</button></div>
+<div class="app">
+  <header class="hero">
+    <div class="brand">STREET KING</div>
+    <h1>NBA 路人王</h1>
+    <p>从18岁开始，把你捏出来的球员放进历史级街头赛场。</p>
+  </header>
 
-  <main id="tab-build">
-    <section class="card" id="builder">
-      <div class="section-title">创建你的球员</div><div class="sub">每项能力从历史球员模板池中选择。越强的模板越贵，总天赋点有限，所以不可能每项都拿历史第一。</div>
-      <label>球员姓名</label><input id="pName" maxlength="18" value="Zejian Song" />
-      <div class="grid3">
-        <div><label>位置</label><select id="pPos"><option>PG</option><option>SG</option><option>SF</option><option>PF</option><option>C</option></select></div>
-        <div><label>身高</label><select id="pHeight"><option value="183">183cm</option><option value="188" selected>188cm</option><option value="193">193cm</option><option value="198">198cm</option><option value="203">203cm</option><option value="208">208cm</option><option value="213">213cm</option></select></div>
-        <div><label>体重</label><select id="pWeight"><option value="78">78kg</option><option value="84" selected>84kg</option><option value="90">90kg</option><option value="98">98kg</option><option value="108">108kg</option><option value="118">118kg</option></select></div>
+  <main>
+    <section id="screen-menu" class="screen active">
+      <div class="menu-grid">
+        <button class="mode-card" data-open="single-build">
+          <span class="mode-kicker">SOLO CAREER</span>
+          <b>单人闯关</b>
+          <small>构建球员 → 每年16强淘汰赛 → 冠亚季军 → 退役榜单与生涯传记</small>
+        </button>
+        <button class="mode-card" data-open="multi-setup">
+          <span class="mode-kicker">FRIEND CAREER</span>
+          <b>多人对战</b>
+          <small>把朋友的自建角色加入同一历史球员池，随机在任何轮次相遇</small>
+        </button>
       </div>
-      <div class="budget"><span>天赋预算 <span class="tiny">上限 32</span></span><b id="budgetUsed">0 / 32</b></div>
-      <div id="skillBuilder"></div>
-      <button class="btn" id="createPlayerBtn">锁定球员并生成角色码</button>
+      <div class="card rules-mini">
+        <b>这一版的核心</b>
+        <p>不是比总评。速度、力量、身材、投射、防守、性格、年龄状态和当届随机手感都会改变每场比赛。</p>
+      </div>
     </section>
 
-    <section class="card hidden" id="playerCardSection">
-      <div class="section-title">你的角色卡</div><div id="playerCard"></div>
-      <div class="inlineBtns"><button class="btn secondary small" id="copyPlayerCode">复制角色码</button><button class="btn ghost small" id="editBuild">重新捏人</button></div>
+    <section id="screen-build" class="screen">
+      <div class="screen-head"><button class="back" data-back>←</button><div><span>PLAYER BUILDER</span><h2>构建你的街头球员</h2></div></div>
+      <div class="card">
+        <div class="form-grid identity-grid">
+          <div><label>球员姓名</label><input id="pName" maxlength="20" placeholder="输入名字" autocomplete="off"></div>
+          <div><label>球衣号码</label><input id="pNumber" type="number" min="0" max="99" placeholder="0-99"></div>
+          <div><label>位置</label><select id="pPos"><option>PG</option><option>SG</option><option>SF</option><option>PF</option><option>C</option></select></div>
+          <div><label>身高</label><select id="pHeight"></select></div>
+          <div><label>体重</label><select id="pWeight"></select></div>
+          <div><label>性格模板</label><select id="pPersonality"></select></div>
+        </div>
+        <div id="personalityDesc" class="personality-desc"></div>
+      </div>
+
+      <div class="card sticky-budget">
+        <div><span class="eyebrow">BUILD BUDGET</span><b id="budgetText">0 / 39</b></div>
+        <div class="budget-track"><i id="budgetBar"></i></div>
+        <small>12项能力。每项1–5分；高档模板更贵。目标是“中上游强者”，不是全99。</small>
+      </div>
+
+      <div id="skillBuilder" class="skills"></div>
+
+      <div class="card build-summary" id="buildSummary"></div>
+      <button class="primary" id="lockBuildBtn">锁定球员 · 进入18岁路人王</button>
+    </section>
+
+    <section id="screen-multi" class="screen">
+      <div class="screen-head"><button class="back" data-back>←</button><div><span>MULTIPLAYER</span><h2>把朋友放进同一条街</h2></div></div>
+      <div class="card">
+        <h3>你的球员</h3>
+        <p class="muted">多人模式仍然先使用你的自建球员。没有角色时先去构建。</p>
+        <div id="multiSelfPreview"></div>
+        <button class="secondary" id="multiBuildBtn">去构建 / 修改我的球员</button>
+      </div>
+      <div class="card">
+        <h3>导入朋友角色码</h3>
+        <textarea id="friendCode" placeholder="粘贴朋友的 SK2-... 角色码"></textarea>
+        <button class="secondary" id="loadFriendBtn">读取角色码</button>
+        <div id="friendPreview"></div>
+      </div>
+      <div class="card">
+        <h3>共同赛事码</h3>
+        <p class="muted">双方输入完全相同的赛事码，再互换角色码。抽签和比赛随机种子就会一致。</p>
+        <input id="sharedSeed" maxlength="20" placeholder="例如 STREET2026">
+        <button class="secondary" id="generateSeedBtn">随机生成赛事码</button>
+      </div>
+      <button class="primary" id="startMultiBtn">开始双人路人王生涯</button>
+    </section>
+
+    <section id="screen-career" class="screen">
+      <div class="screen-head"><button class="back" id="careerMenuBtn">⌂</button><div><span id="careerModeLabel">SOLO CAREER</span><h2 id="careerTitle">18岁 · 路人王</h2></div><div class="career-crowns">🏆 <b id="crownCount">0</b></div></div>
+
+      <div class="card season-status" id="seasonStatus"></div>
+
+      <div class="card bracket-card">
+        <div class="card-title-row"><div><span class="eyebrow">TOURNAMENT</span><h3>本届16强对阵</h3></div><span id="tournamentStage" class="stage-pill">16强</span></div>
+        <div class="bracket-scroll"><div id="bracket" class="bracket"></div></div>
+        <div id="bronzeBox" class="bronze-box"></div>
+      </div>
+
+      <div class="card story-card" id="storyCard">
+        <span class="eyebrow">COURTSIDE STORY</span>
+        <h3 id="storyHeading">赛前</h3>
+        <div id="storyBody" class="story-body"></div>
+        <button class="primary" id="playRoundBtn">开始比赛</button>
+      </div>
+
+      <div class="card hidden" id="resultCard">
+        <div id="matchResult"></div>
+        <button class="primary" id="continueBtn">继续</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title-row"><div><span class="eyebrow">CAREER LOG</span><h3>历年战绩</h3></div><span id="retireAgeLabel"></span></div>
+        <div id="careerHistory"></div>
+      </div>
+    </section>
+
+    <section id="screen-retire" class="screen">
+      <div class="screen-head"><button class="back" id="retireMenuBtn">⌂</button><div><span>LEGACY</span><h2>街头生涯落幕</h2></div></div>
+      <div class="card" id="legacySummary"></div>
+      <div class="card">
+        <span class="eyebrow">ALL-TIME STREET RANKING</span><h3>街头历史榜</h3>
+        <div id="leaderboard"></div>
+      </div>
+      <div class="card">
+        <span class="eyebrow">STORY</span><h3>你的街头生涯</h3>
+        <div id="careerNarrative" class="story-body"></div>
+      </div>
+      <button class="primary" id="restartBtn">回主菜单</button>
     </section>
   </main>
 
-  <main id="tab-career" class="hidden">
-    <section class="card" id="careerEmpty"><div class="section-title">路人王生涯</div><div class="sub">先在“捏球员”里创建角色。之后从18岁开始，每一岁参加一届路人王，每届四关。</div><button class="btn secondary" data-go="build">去创建球员</button></section>
-    <div id="careerGame" class="hidden">
-      <section class="card"><div class="careerTop"><div><div class="age"><span id="careerAge">18</span> 岁</div><div class="sub" id="careerSeasonText">第1届路人王</div></div><div class="crown">🏆 <span id="careerCrowns">0</span> 冠</div></div><div id="careerMini"></div></section>
-      <section class="card" id="ladderCard"><div class="section-title">本届阶梯</div><div class="sub">连续过四关才能成为这一岁的路人王。</div><div id="ladder" class="ladder"></div></section>
-      <section class="card" id="storyCard"><div id="storyTitle" class="section-title"></div><div id="storyText" class="story"></div><button class="btn" id="fightCareerBtn">开打</button></section>
-      <section class="card hidden" id="careerResultCard"><div id="careerResult"></div><button class="btn" id="careerContinueBtn">继续</button></section>
-      <section class="card"><div class="section-title">生涯履历</div><div id="careerHistory" class="history"><div class="sub">还没有参加过完整的一届。</div></div></section>
-    </div>
-  </main>
-
-  <main id="tab-battle" class="hidden">
-    <section class="card" id="battleNoPlayer"><div class="section-title">街头对战</div><div class="sub">先创建自己的球员，之后才能导入朋友的角色码。</div><button class="btn secondary" data-go="build">去创建球员</button></section>
-    <div id="battleArea" class="hidden">
-      <section class="card"><div class="section-title">导入朋友角色</div><div class="sub">朋友把自己的 PLAYER CODE 发给你。双方角色码 + 同一个比赛种子，会得到完全一致的模拟结果。</div><label>朋友角色码</label><textarea id="friendCode" placeholder="LRW1...."></textarea><button class="btn secondary" id="loadFriendBtn">读取朋友角色</button><div id="friendPreview" class="hidden" style="margin-top:10px"></div></section>
-      <section class="card"><div class="section-title">选择对战模式</div><div class="modeCards"><div class="mode"><b>1V1</b><span class="sub">11分制，三分线外算2分，回合级模拟。</span><button class="btn small" data-mode="1v1">开始好友1V1</button></div><div class="mode"><b>3V3</b><span class="sub">双方从历史全明星队友池按位置抽两名队友。</span><button class="btn small" data-mode="3v3">开始好友3V3</button></div></div></section>
-      <section class="card"><div class="section-title">挑战历史电脑</div><div class="sub">系统会根据你的主位置给出不同的历史强者。</div><div id="cpuOpponents" class="grid2" style="margin-top:9px"></div></section>
-      <section class="card hidden" id="battleResultCard"><div id="battleResult"></div><div class="inlineBtns"><button class="btn secondary small" id="copyMatchCode">复制比赛码</button><button class="btn ghost small" id="rematchBtn">同阵容换种子再战</button></div><div id="matchCodeBox" class="code"></div></section>
-      <section class="card"><div class="section-title">用比赛码复现</div><div class="sub">把比赛码发给朋友。朋友输入后，会在自己的手机跑出同一比分、同一队友和同一回合顺序。</div><textarea id="matchCodeInput" placeholder="VS1...."></textarea><button class="btn secondary" id="replayMatchBtn">读取并复现比赛</button></section>
-    </div>
-  </main>
-  <div class="footer">纯娱乐同人模拟项目 · 与 NBA 及球员本人无官方关联。<br/>比赛结果由公开式数值规则与确定性随机种子生成。</div>
+  <footer>非官方同人娱乐模拟 · 球员性格与对白为夸张化游戏创作，不代表本人真实言论。</footer>
 </div>
 <div id="toast" class="toast hidden"></div>
-<script src="data.js?v=1"></script><script src="app.js?v=1"></script>
+<script src="data.js?v=3"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
