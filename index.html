@@ -4,8 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c12">
-<title>NBA 路人王 · Street King</title>
+<title>NBA 路人王 · Street King V5.2</title>
+<meta name="street-king-build" content="V5.2-20260818-2336">
 <link rel="stylesheet" href="v5.css?v=5">
+<link rel="stylesheet" href="v52.css?b=20260818-2336">
 </head>
 <body>
 <div class="app-shell">
@@ -17,7 +19,7 @@
   <main>
     <section id="screen-menu" class="screen active">
       <div class="hero-card">
-        <div class="hero-kicker">15 EDITIONS · ONE FIXED FIELD</div>
+        <div class="hero-kicker">V5.2 · 15 EDITIONS · ONE FIXED FIELD</div>
         <h2>一条街，十五届赛事。</h2>
         <p>每次新开生涯只随机一次参赛名单。此后这16个人会从18岁一路打到第15届，刷新页面也不会换人；只有你主动“新开生涯”才会重新 Roll。</p>
       </div>
@@ -75,7 +77,7 @@
         <div class="health-badge">身体 <b id="healthText">100</b></div>
       </div>
       <div class="card"><div class="title-row"><div><span class="eyebrow">TOURNAMENT</span><h3>本届签表</h3></div><span id="stageLabel" class="pill"></span></div><div class="bracket-scroll"><div id="bracket" class="bracket"></div></div><div id="bronzeInfo"></div></div>
-      <div id="storyCard" class="card"><span class="eyebrow">COURTSIDE STORY</span><h3 id="storyHeading"></h3><div id="storyBody" class="story"></div><button id="startMatchBtn" class="primary">开始比赛</button></div>
+      <div id="storyCard" class="card"><span class="eyebrow">COURTSIDE STORY</span><h3 id="storyHeading"></h3><div id="storyBody" class="story"></div><div id="strategyBox" class="strategy-box hidden"></div><button id="startMatchBtn" class="primary">开始比赛</button></div>
 
       <div id="liveCard" class="card hidden">
         <div class="live-head"><div><span class="eyebrow">LIVE</span><h3 id="liveMatchTitle"></h3></div><div class="live-score"><b id="scoreA">0</b><span>:</span><b id="scoreB">0</b></div></div>
@@ -87,7 +89,7 @@
             <div id="ball" class="ball"></div>
           </div>
         </div>
-        <div class="speed-row"><span>观赛速度</span><button class="speed-btn active" data-speed="1">1×</button><button class="speed-btn" data-speed="2">2×</button></div>
+        <div class="speed-row"><span>观赛速度</span><button class="speed-btn active" data-speed="1">正常</button><button class="speed-btn" data-speed="3">3×</button><button id="skipLiveBtn" class="skip-btn">跳过动画</button></div>
         <div id="liveLog" class="live-log"></div>
       </div>
 
@@ -98,7 +100,8 @@
     <section id="screen-offseason" class="screen">
       <div class="screen-title"><div><span>OFFSEASON</span><h2 id="offseasonTitle"></h2></div></div>
       <div class="card"><div class="title-row"><h3>当前能力</h3><span id="compText" class="pill"></span></div><div id="offseasonAttrs" class="attr-grid"></div><div id="templateCompare" class="template-compare"></div></div>
-      <div class="card"><h3>休赛期选择</h3><p class="muted">年龄自然变化会先发生，再叠加你的训练选择。导师训练会逐渐改变你的出手倾向。</p><div id="offseasonChoices" class="choice-grid"></div></div>
+      <div class="card insight-card"><div class="title-row"><div><span class="eyebrow">ENLIGHTENMENT</span><h3>悟道进度</h3></div><b id="insightPct">0%</b></div><div class="insight-track"><i id="insightFill"></i></div><div id="insightState" class="insight-state"></div><div id="mentorState" class="mentor-state"></div></div>
+      <div class="card"><h3>休赛期选择</h3><p class="muted">每年仍然只出现4个选项，但从大型数据库里抽取。导师可以连续深造到极致，也可以中途换师；高风险路线可能大幅推进悟道，也可能落空。</p><div id="offseasonChoices" class="choice-grid"></div></div>
       <div id="retireChoiceBox" class="card hidden"></div>
     </section>
 
@@ -114,11 +117,7 @@
   <footer>架空篮球游戏 · 非官方 NBA 产品。涉及争议动作、冲突和对白均为游戏化虚构事件。</footer>
 </div>
 <div id="toast" class="toast hidden"></div>
-<script src="data.js?v=5"></script>
-<script src="v5-data.js?v=5"></script>
-<script src="v5-core.js?v=5"></script>
-<script src="v5-game.js?v=5"></script>
-<script src="v5-career.js?v=5"></script>
-<script src="v5-ui.js?v=5"></script>
+<script src="data.js?v=52"></script>
+<script src="v52-loader.js?b=20260818-2336"></script>
 </body>
 </html>
