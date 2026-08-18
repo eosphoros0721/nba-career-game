@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NBA 生涯模拟器</title>
+<style>
+:root{--bg:#0d1016;--card:#171b24;--line:#2a303d;--text:#f5f7fb;--muted:#9aa3b2;--orange:#ff7a00;--gold:#ffd166;--green:#47d18c}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0a0d12,#121722);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;min-height:100vh}
+.wrap{max-width:720px;margin:auto;padding:18px 14px 40px}.hero{padding:12px 2px 6px}.hero h1{font-size:28px;margin:0 0 6px}.hero p{margin:0;color:var(--muted);font-size:14px}
+.card{background:rgba(23,27,36,.96);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px;box-shadow:0 12px 35px rgba(0,0,0,.16)}
+label{display:block;color:#c9ced8;font-size:13px;margin:12px 0 6px}input,select{width:100%;border:1px solid #343c4b;background:#0f141c;color:#fff;padding:12px;border-radius:11px;font-size:16px;outline:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{width:100%;border:0;border-radius:13px;padding:14px 16px;font-size:16px;font-weight:800;color:white;background:var(--orange);margin-top:14px;cursor:pointer}.btn.secondary{background:#2b3342}.btn.choice{background:#222936;text-align:left;font-weight:650;margin-top:8px}.btn.choice small{display:block;color:#9aa3b2;font-weight:400;margin-top:4px}.hidden{display:none!important}
+.topline{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.badge{padding:6px 10px;border-radius:999px;background:#252c38;color:#d8dde6;font-size:12px;white-space:nowrap}.muted{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.stat{background:#10151d;border-radius:12px;padding:10px;text-align:center;font-size:12px;color:#9ea7b6}.stat b{display:block;color:#fff;font-size:20px;margin-top:3px}.bar{height:9px;background:#0e131b;border-radius:99px;overflow:hidden;margin-top:7px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#ff7a00,#ffb25b);width:50%}
+.season-title{font-size:21px;font-weight:850}.headline{font-size:17px;font-weight:800;margin-bottom:6px}.event{line-height:1.7;color:#d6dae2}.resultline{display:flex;justify-content:space-between;border-bottom:1px solid #29303b;padding:9px 0;font-size:14px}.resultline:last-child{border-bottom:0}.award{color:var(--gold);font-weight:750}.win{color:var(--green);font-weight:750}
+.history-item{padding:12px 0;border-bottom:1px solid #29303b}.history-item:last-child{border-bottom:0}.history-head{display:flex;justify-content:space-between;gap:10px;font-weight:750}.history-meta{font-size:13px;color:#a5adba;margin-top:5px;line-height:1.55}.footer-note{text-align:center;color:#77808f;font-size:12px;margin-top:18px}
+@media(max-width:500px){.stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr 1fr}.hero h1{font-size:25px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero"><h1>🏀 NBA 生涯模拟器</h1><p>从选秀夜开始，一年一年打出你的职业生涯。</p></div>
+
+  <section id="setup" class="card">
+    <div class="headline">创建球员</div>
+    <label>姓名</label><input id="name" value="Zejian Song" maxlength="20">
+    <div class="grid2">
+      <div><label>位置</label><select id="pos"><option>PG</option><option>SG</option><option>SF</option><option>PF</option><option>C</option></select></div>
+      <div><label>天赋</label><select id="talent"><option value="74">首轮秀</option><option value="78" selected>乐透秀</option><option value="82">状元级</option></select></div>
+    </div>
+    <label>球员模板</label><select id="style"><option value="scorer">持球得分核心</option><option value="allround" selected>全能锋线核心</option><option value="playmaker">组织发动机</option><option value="twoway">攻防一体</option></select>
+    <button class="btn" id="startBtn">进入选秀大会</button>
+  </section>
+
+  <section id="game" class="hidden">
+    <div class="card">
+      <div class="topline"><div><div id="playerName" class="season-title"></div><div id="playerMeta" class="muted"></div></div><div id="legacy" class="badge">新秀</div></div>
+      <div class="stats">
+        <div class="stat">年龄<b id="age">19</b></div><div class="stat">能力<b id="ovr">78</b></div><div class="stat">总冠军<b id="rings">0</b></div><div class="stat">MVP<b id="mvps">0</b></div>
+      </div>
+      <div style="margin-top:13px;font-size:12px;color:#aab1bd">生涯声望 <span id="repText">12</span>/100<div class="bar"><i id="repBar"></i></div></div>
+    </div>
+
+    <div id="eventCard" class="card">
+      <div id="seasonLabel" class="muted" style="font-size:13px"></div>
+      <div id="eventTitle" class="headline"></div>
+      <div id="eventText" class="event"></div>
+      <div id="choices"></div>
+    </div>
+
+    <div id="seasonResult" class="card hidden">
+      <div id="resultTitle" class="headline"></div>
+      <div id="resultBody"></div>
+      <button class="btn" id="nextBtn">进入下一赛季</button>
+    </div>
+
+    <div class="card"><div class="headline">生涯履历</div><div id="history"><div class="muted">你的故事才刚刚开始。</div></div></div>
+  </section>
+
+  <section id="retired" class="card hidden"><div class="headline">🏁 生涯结束</div><div id="retireText" class="event"></div><button class="btn" onclick="location.reload()">重新开档</button></section>
+  <div class="footer-note">纯娱乐模拟 · 非官方 NBA 产品</div>
+</div>
+<script>
+(function(){
+const teams=["湖人","凯尔特人","勇士","尼克斯","热火","公牛","独行侠","掘金","雄鹿","太阳","快船","76人","雷霆","马刺","火箭","骑士","森林狼","魔术","国王","灰熊"];
+const $=id=>document.getElementById(id); const rand=(a,b)=>Math.random()*(b-a)+a; const pick=a=>a[Math.floor(Math.random()*a.length)]; const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+let P=null;
+function start(){
+  P={name:$("name").value.trim()||"匿名球员",pos:$("pos").value,style:$("style").value,ovr:+$("talent").value,age:19,year:1,team:pick(teams),rings:0,mvps:0,stars:0,fmvps:0,allnba:0,rep:12,history:[],loyalty:50,health:100};
+  $("setup").classList.add("hidden"); $("game").classList.remove("hidden");
+  updateHeader(); draftNight();
+}
+function updateHeader(){
+  $("playerName").textContent=P.name+" · "+P.pos; $("playerMeta").textContent=P.team+" · 第"+P.year+"赛季"; $("age").textContent=P.age; $("ovr").textContent=Math.round(P.ovr); $("rings").textContent=P.rings; $("mvps").textContent=P.mvps; $("repText").textContent=Math.round(P.rep); $("repBar").style.width=clamp(P.rep,0,100)+"%";
+  let l="联盟新人"; if(P.rep>30)l="潜力新星"; if(P.rep>50)l="全明星"; if(P.rep>70)l="超级巨星"; if(P.rep>88)l="联盟门面"; $("legacy").textContent=l;
+}
+function setEvent(title,text,choices){
+  $("eventCard").classList.remove("hidden"); $("seasonResult").classList.add("hidden"); $("seasonLabel").textContent="第 "+P.year+" 赛季 · "+P.age+" 岁 · "+P.team; $("eventTitle").textContent=title; $("eventText").innerHTML=text; const box=$("choices"); box.innerHTML="";
+  choices.forEach(c=>{const b=document.createElement("button");b.className="btn choice";b.innerHTML=c.label+(c.desc?"<small>"+c.desc+"</small>":"");b.onclick=()=>{c.run();simulateSeason();};box.appendChild(b);});
+}
+function draftNight(){
+  setEvent("选秀夜：你被 "+P.team+" 选中","聚光灯打在你身上。球队管理层问你，新秀赛季最想证明什么？",[
+    {label:"我要立刻争取首发",desc:"更高数据上限，但压力更大",run:()=>{P.ovr+=1;P.rep+=3;P.health-=3}},
+    {label:"先适应 NBA 节奏",desc:"稳健成长，降低受伤概率",run:()=>{P.ovr+=.5;P.health+=2}},
+    {label:"我要成为球队门面",desc:"提升声望，但会增加球权竞争",run:()=>{P.rep+=6;P.loyalty-=2}}
+  ]);
+}
+function nextEvent(){
+  if(P.age>=36){retire();return}
+  const roll=Math.random();
+  if(roll<.20){
+    setEvent("休赛期训练选择","训练营即将开始，你准备把整个夏天押在哪个方向？",[
+      {label:"疯狂练投篮",desc:"得分成长更明显",run:()=>{P.ovr+=rand(1,2.2);P.rep+=2}},
+      {label:"强化身体和防守",desc:"提升稳定性和耐久",run:()=>{P.ovr+=rand(.7,1.6);P.health+=6}},
+      {label:"研究比赛和组织",desc:"更全面、更容易打出高阶表现",run:()=>{P.ovr+=rand(.8,1.8);P.rep+=1}}
+    ]);
+  } else if(roll<.36 && P.year>2){
+    setEvent("交易流言","记者爆料：其他球队正在询价你。你会怎么回应？",[
+      {label:"公开表示忠于球队",desc:"提高忠诚度，降低短期交易概率",run:()=>{P.loyalty+=12;P.rep+=2}},
+      {label:"保持沉默",desc:"不改变现状",run:()=>{}},
+      {label:"暗示愿意接受交易",desc:"可能换队，也可能刺激管理层",run:()=>{P.loyalty-=18;if(Math.random()<.55)P.team=pick(teams);P.rep+=3}}
+    ]);
+  } else if(roll<.50 && P.ovr>84){
+    setEvent("球队方向选择","管理层愿意围绕你调整阵容，你最想要什么？",[
+      {label:"再找一个明星搭档",desc:"提升争冠概率",run:()=>{P.rep+=2;P.loyalty+=3}},
+      {label:"保持阵容连续性",desc:"化学反应更稳定",run:()=>{P.loyalty+=8}},
+      {label:"把球权彻底交给我",desc:"数据上限更高，风险也更高",run:()=>{P.rep+=5;P.health-=4}}
+    ]);
+  } else if(roll<.62){
+    setEvent("身体状态","赛季前体检显示你的身体出现一些疲劳信号。",[
+      {label:"减少负荷管理",desc:"数据略降，但更健康",run:()=>{P.health+=8;P.rep-=1}},
+      {label:"坚持全勤冲奖项",desc:"数据机会更好，但伤病风险上升",run:()=>{P.rep+=3;P.health-=10}}
+    ]);
+  } else {
+    setEvent("新赛季目标","媒体日上，记者问你本赛季最看重什么？",[
+      {label:"个人数据和奖项",desc:"冲击全明星、最佳阵容与 MVP",run:()=>{P.rep+=4;P.health-=3}},
+      {label:"季后赛走得更远",desc:"更偏团队成功",run:()=>{P.loyalty+=4;P.rep+=2}},
+      {label:"稳定进步就好",desc:"低风险成长",run:()=>{P.ovr+=.6;P.health+=3}}
+    ]);
+  }
+}
+function simulateSeason(){
+  $("eventCard").classList.add("hidden");
+  let growth=P.age<=23?rand(.6,1.8):P.age<=28?rand(-.2,.9):P.age<=31?rand(-.7,.3):rand(-1.9,-.5); P.ovr=clamp(P.ovr+growth,66,99);
+  let injury=0; if(P.health<75 && Math.random()<(75-P.health)/95){injury=Math.floor(rand(8,35));P.ovr-=injury>22?1.5:.5;P.rep-=2}
+  let pts=8+(P.ovr-70)*.85+rand(-2.8,2.8),reb=3+(P.ovr-70)*.13+rand(-1,1),ast=2.5+(P.ovr-70)*.15+rand(-1.2,1.2);
+  if(P.style==="scorer")pts+=5;if(P.style==="allround"){pts+=2;reb+=1.6;ast+=1.4}if(P.style==="playmaker"){pts+=1;ast+=4}if(P.style==="twoway"){pts-=.5;reb+=1.7}
+  if(injury){const f=clamp(1-injury/120,.7,.96);pts*=f;reb*=f;ast*=f}
+  pts=clamp(pts,5,39);reb=clamp(reb,2,14);ast=clamp(ast,1,13.5);
+  const starScore=P.ovr+pts*.62+ast*.34+reb*.14; let awards=[]; let wins=Math.round(clamp(28+(P.ovr-76)*1.15+rand(-9,10),18,67));
+  if(starScore>91&&Math.random()<.76){P.stars++;awards.push("全明星");P.rep+=3}
+  if(starScore>105&&Math.random()<.28){P.mvps++;awards.push("MVP");P.rep+=9}
+  if(P.ovr>86&&Math.random()<.62){P.allnba++;awards.push("最佳阵容");P.rep+=3}
+  const playoff=wins>=41; let champ=false; if(playoff&&P.ovr>82&&Math.random()<clamp((wins-38)/95+(P.ovr-84)/75,.05,.32)){champ=true;P.rings++;awards.push("🏆 总冠军");P.rep+=10;if(P.ovr>89&&Math.random()<.62){P.fmvps++;awards.push("FMVP");P.rep+=6}}
+  if(P.loyalty<28&&P.year>3&&Math.random()<.22){P.team=pick(teams);awards.push("休赛期被交易")}
+  P.health=clamp(P.health+rand(-3,5),55,100); P.rep=clamp(P.rep,0,100);
+  const item={year:P.year,age:P.age,team:P.team,pts,reb,ast,wins,awards:[...awards],injury};P.history.push(item);
+  $("resultTitle").textContent="第 "+P.year+" 赛季结束";
+  $("resultBody").innerHTML='<div class="resultline"><span>常规赛战绩</span><b>'+wins+' 胜</b></div><div class="resultline"><span>场均数据</span><b>'+pts.toFixed(1)+' / '+reb.toFixed(1)+' / '+ast.toFixed(1)+'</b></div><div class="resultline"><span>季后赛</span><b class="'+(champ?'win':'')+'">'+(champ?'夺冠':playoff?'打进季后赛':'无缘季后赛')+'</b></div><div class="resultline"><span>赛季荣誉</span><b class="award">'+(awards.length?awards.join(' · '):'—')+'</b></div>'+(injury?'<div class="resultline"><span>伤病</span><b>缺阵约 '+injury+' 场</b></div>':'');
+  $("seasonResult").classList.remove("hidden"); renderHistory(); updateHeader();
+}
+function renderHistory(){
+  $("history").innerHTML=P.history.slice().reverse().map(s=>'<div class="history-item"><div class="history-head"><span>第'+s.year+'季 · '+s.team+'</span><span>'+s.wins+'胜</span></div><div class="history-meta">'+s.age+'岁　'+s.pts.toFixed(1)+'分 / '+s.reb.toFixed(1)+'板 / '+s.ast.toFixed(1)+'助　'+(s.awards.length?'<span class="award">'+s.awards.join(' · ')+'</span>':'')+'</div></div>').join('');
+}
+function advance(){P.year++;P.age++; if(P.age>30)P.health-=3; updateHeader(); nextEvent();}
+function retire(){
+  $("game").classList.add("hidden");$("retired").classList.remove("hidden");
+  let tier="出色的 NBA 球员";if(P.rep>55)tier="全明星级球星";if(P.rep>72)tier="名人堂级巨星";if(P.rep>88)tier="历史级超级巨星";
+  const best=P.history.reduce((a,b)=>!a||b.pts>a.pts?b:a,null);
+  $("retireText").innerHTML='<p><b>'+P.name+'</b> 在 '+P.age+' 岁结束职业生涯。</p><p>最终评价：<b class="award">'+tier+'</b></p><p>生涯荣誉：'+P.rings+' 冠 · '+P.mvps+' MVP · '+P.fmvps+' FMVP · '+P.stars+' 次全明星 · '+P.allnba+' 次最佳阵容。</p>'+(best?'<p>最高得分赛季：第 '+best.year+' 季，场均 '+best.pts.toFixed(1)+' 分。</p>':'');
+}
+$("startBtn").addEventListener("click",start);$("nextBtn").addEventListener("click",advance);
+})();
+</script>
+</body>
+</html>
