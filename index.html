@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c12">
-<title>NBA 路人王 · Street King V5.2.1</title>
-<meta name="street-king-build" content="V5.2.1-20260819-0913">
-<link rel="stylesheet" href="v5.css?b=20260819-0913">
-<link rel="stylesheet" href="v52.css?b=20260819-0913">
+<title>NBA 路人王 · Street King V5.3</title>
+<meta name="street-king-build" content="V5.3-20260819-0946">
+<link rel="stylesheet" href="v5.css?b=20260819-0946">
+<link rel="stylesheet" href="v52.css?b=20260819-0946">
+<link rel="stylesheet" href="v53.css?b=20260819-0946">
 </head>
 <body>
 <div class="app-shell">
@@ -19,14 +20,14 @@
   <main>
     <section id="screen-menu" class="screen active">
       <div class="hero-card">
-        <div class="hero-kicker">V5.2.1 · 15 EDITIONS · ONE FIXED FIELD</div>
-        <h2>一条街，十五届赛事。</h2>
-        <p>每次新开生涯只随机一次参赛名单。此后这16个人会从18岁一路打到第15届，刷新页面也不会换人；只有你主动“新开生涯”才会重新 Roll。</p>
+        <div class="hero-kicker">V5.3 · 15 EDITIONS · ONE FIXED FIELD</div>
+        <h2>一条街，一条会记住你的时间线。</h2>
+        <p>单人生涯固定15届；多人1V1可选3届快速赛或15届正常赛，3V3固定3届。每次新开生涯只随机一次参赛名单。</p>
       </div>
       <div id="continueBox" class="card hidden"></div>
       <div class="menu-grid">
-        <button class="menu-card" id="newSoloBtn"><span>SOLO</span><b>单人闯关</b><small>自建球员 → 固定16人参赛池 → 15届淘汰赛 → 休赛期成长 → 历史榜单</small></button>
-        <button class="menu-card" id="newMultiBtn"><span>MULTI</span><b>多人对战</b><small>把朋友的自建角色加入同一固定球员池，整个生涯随机相遇</small></button>
+        <button class="menu-card" id="newSoloBtn"><span>SOLO</span><b>单人闯关</b><small>自建球员 → 固定16人参赛池 → 15届淘汰赛 → 双栏休赛期 → 悟道与历史榜单</small></button>
+        <button class="menu-card" id="newMultiBtn"><span>MULTI</span><b>多人对战</b><small>好友1V1快速/正常赛，或3V3随机历史球星队友</small></button>
       </div>
       <div class="card small-note">比赛、对话与剧情均为架空游戏模拟。球员对白是夸张化创作，不代表本人真实言论或真实行为。</div>
     </section>
@@ -45,9 +46,9 @@
         <div id="personalityText" class="info-strip"></div>
       </div>
       <div class="card budget-card">
-        <div class="budget-head"><span>BUILD BUDGET</span><b id="budgetText">0 / 39</b></div>
+        <div class="budget-head"><span>BUILD BUDGET</span><b id="budgetText">0 / 36</b></div>
         <div class="budget-track"><i id="budgetFill"></i></div>
-        <p>12项能力，每项1–5档；每个分档至少3名球员模板。高档越多，其他地方就必须让步。</p>
+        <p>11项可选能力，已删除组织；3V3中的传球阅读按位置与控球自动派生。</p>
       </div>
       <div id="skillBuilder" class="skill-list"></div>
       <div id="buildPreview" class="card"></div>
@@ -59,12 +60,12 @@
       <div class="card"><h3>你的球员</h3><div id="multiSelf"></div><button id="multiBuildBtn" class="secondary">创建 / 修改我的球员</button></div>
       <div class="card"><h3>朋友角色码</h3><textarea id="friendCode" placeholder="粘贴 SK5-... 角色码"></textarea><button id="loadFriendBtn" class="secondary">读取朋友角色</button><div id="friendPreview"></div></div>
       <div class="card"><h3>共同赛事码</h3><p class="muted">用于固定本次16人球员池和每年的抽签。双方使用相同赛事码与双方角色码时，初始世界一致。</p><input id="sharedSeed" maxlength="24" placeholder="例如 STREET-0721"><button id="randomSeedBtn" class="secondary">随机生成</button></div>
-      <button id="startMultiBtn" class="primary">锁定16人名单并开始</button>
+      <button id="startMultiBtn" class="primary">锁定名单并开始</button>
     </section>
 
     <section id="screen-field" class="screen">
-      <div class="screen-title"><button class="back-btn" data-back>←</button><div><span>CAREER FIELD</span><h2>本次15届固定参赛名单</h2></div></div>
-      <div class="card highlight"><p>以下16人一旦确认，整个生涯不再变化。每一年只会重新抽签，不会重新抽参赛者。</p></div>
+      <div class="screen-title"><button class="back-btn" data-back>←</button><div><span>CAREER FIELD</span><h2>本次固定参赛名单</h2></div></div>
+      <div class="card highlight"><p>以下16人一旦确认，本次时间线不再变化。每一年只重新抽签，不重新抽参赛者。</p></div>
       <div class="card"><div class="title-row"><h3>本次入选16人</h3><span id="fieldSeedLabel" class="pill"></span></div><div id="selectedField" class="roster-grid"></div></div>
       <div class="card"><details><summary>查看完整候选球员池</summary><div id="candidatePool" class="candidate-list"></div></details></div>
       <div id="playerCodeBox" class="card hidden"></div>
@@ -101,12 +102,12 @@
       <div class="screen-title"><div><span>OFFSEASON</span><h2 id="offseasonTitle"></h2></div></div>
       <div class="card"><div class="title-row"><h3>当前能力</h3><span id="compText" class="pill"></span></div><div id="offseasonAttrs" class="attr-grid"></div><div id="templateCompare" class="template-compare"></div></div>
       <div class="card insight-card"><div class="title-row"><div><span class="eyebrow">ENLIGHTENMENT</span><h3>悟道进度</h3></div><b id="insightPct">0%</b></div><div class="insight-track"><i id="insightFill"></i></div><div id="insightState" class="insight-state"></div><div id="mentorState" class="mentor-state"></div></div>
-      <div class="card"><h3>休赛期选择</h3><p class="muted">每年仍然只出现4个选项，但从大型数据库里抽取。导师可以连续深造到极致，也可以中途换师；高风险路线可能大幅推进悟道，也可能落空。</p><div id="offseasonChoices" class="choice-grid"></div></div>
+      <div class="card"><h3>休赛期选择</h3><p class="muted">左栏能力/导师四选一，右栏悟道修炼四选一。两栏各选一次才进入下一年。</p><div id="offseasonChoices" class="choice-grid"></div></div>
       <div id="retireChoiceBox" class="card hidden"></div>
     </section>
 
     <section id="screen-retire" class="screen">
-      <div class="screen-title"><button id="retireHomeBtn" class="back-btn">⌂</button><div><span>LEGACY</span><h2>十五届之后，街头留下了什么</h2></div></div>
+      <div class="screen-title"><button id="retireHomeBtn" class="back-btn">⌂</button><div><span>LEGACY</span><h2>赛程之后，街头留下了什么</h2></div></div>
       <div id="legacySummary" class="card"></div>
       <div class="card"><span class="eyebrow">ALL-TIME RANKING</span><h3>最终街头榜</h3><div id="leaderboard"></div></div>
       <div class="card"><span class="eyebrow">CAREER STORY</span><h3>生涯解说</h3><div id="careerNarrative" class="story long-story"></div></div>
@@ -117,12 +118,15 @@
   <footer>架空篮球游戏 · 非官方 NBA 产品。涉及争议动作、冲突和对白均为游戏化虚构事件。</footer>
 </div>
 <div id="toast" class="toast hidden"></div>
-<script src="data.js?b=20260819-0913"></script>
-<script src="v5-data.js?b=20260819-0913"></script>
-<script src="v5-core.js?b=20260819-0913"></script>
-<script src="v5-game.js?b=20260819-0913"></script>
-<script src="v5-career.js?b=20260819-0913"></script>
-<script src="v5-ui.js?b=20260819-0913"></script>
-<script src="v52-fix.js?b=20260819-0913"></script>
+<script src="data.js?b=20260819-0946"></script>
+<script src="v5-data.js?b=20260819-0946"></script>
+<script src="v5-core.js?b=20260819-0946"></script>
+<script src="v5-game.js?b=20260819-0946"></script>
+<script src="v5-career.js?b=20260819-0946"></script>
+<script src="v5-ui.js?b=20260819-0946"></script>
+<script src="v52-fix.js?b=20260819-0946"></script>
+<script src="v53-1.js?b=20260819-0946"></script>
+<script src="v53-2.js?b=20260819-0946"></script>
+<script src="v53-3.js?b=20260819-0946"></script>
 </body>
 </html>
