@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c12">
-<title>NBA 路人王 · Street King V5.4</title>
-<meta name="street-king-build" content="V5.4-20260819-1017">
-<link rel="stylesheet" href="v5.css?b=20260819-1017">
-<link rel="stylesheet" href="v52.css?b=20260819-1017">
-<link rel="stylesheet" href="v53.css?b=20260819-1017">
-<link rel="stylesheet" href="v54.css?b=20260819-1017">
+<title>NBA 路人王 · Street King V5.4.1</title>
+<meta name="street-king-build" content="V5.4.1-20260819-1029">
+<link rel="stylesheet" href="v5.css?b=20260819-1029">
+<link rel="stylesheet" href="v52.css?b=20260819-1029">
+<link rel="stylesheet" href="v53.css?b=20260819-1029">
+<link rel="stylesheet" href="v54.css?b=20260819-1029">
 </head>
 <body>
 <div class="app-shell">
@@ -18,7 +18,7 @@
     <button id="homeBtn" class="icon-btn hidden" aria-label="主菜单">⌂</button>
   </header>
   <main>
-    <section id="screen-menu" class="screen active"><div class="hero-card"><div class="hero-kicker">V5.4 · 10 EDITIONS · ONE FIXED FIELD</div><h2>一条街，一条会记住你的时间线。</h2><p>单人生涯固定10届；多人1V1可选3届快速赛或10届正常赛，3V3固定3届。悟道可持续推进到200%。</p></div><div id="continueBox" class="card hidden"></div><div class="menu-grid"><button class="menu-card" id="newSoloBtn"><span>SOLO</span><b>单人闯关</b><small>自建球员 → 固定16人参赛池 → 10届淘汰赛 → 双栏休赛期 → 200%悟道与历史榜单</small></button><button class="menu-card" id="newMultiBtn"><span>MULTI</span><b>多人对战</b><small>好友1V1快速/正常赛，或3V3随机历史球星队友</small></button></div><div class="card small-note">比赛、对话与剧情均为架空游戏模拟。球员对白是夸张化创作，不代表本人真实言论或真实行为。</div></section>
+    <section id="screen-menu" class="screen active"><div class="hero-card"><div class="hero-kicker">V5.4.1 · 10 EDITIONS · SAFE BOOT</div><h2>一条街，一条会记住你的时间线。</h2><p>单人生涯固定10届；多人1V1可选3届快速赛或10届正常赛，3V3固定3届。悟道可持续推进到200%。</p></div><div id="continueBox" class="card hidden"></div><div class="menu-grid"><button class="menu-card" id="newSoloBtn"><span>SOLO</span><b>单人闯关</b><small>自建球员 → 固定16人参赛池 → 10届淘汰赛 → 双栏休赛期 → 200%悟道与历史榜单</small></button><button class="menu-card" id="newMultiBtn"><span>MULTI</span><b>多人对战</b><small>好友1V1快速/正常赛，或3V3随机历史球星队友</small></button></div><div class="card small-note">比赛、对话与剧情均为架空游戏模拟。球员对白是夸张化创作，不代表本人真实言论或真实行为。</div></section>
     <section id="screen-build" class="screen"><div class="screen-title"><button class="back-btn" data-back>←</button><div><span>PLAYER BUILDER</span><h2>构建你的球员</h2></div></div><div class="card"><div class="identity-grid"><div><label>姓名</label><input id="pName" maxlength="20" placeholder="输入姓名" autocomplete="off"></div><div><label>球衣号码</label><input id="pNumber" type="number" min="0" max="99" placeholder="0-99"></div><div><label>位置</label><select id="pPos"><option>PG</option><option>SG</option><option>SF</option><option>PF</option><option>C</option></select></div><div><label>身高</label><select id="pHeight"></select></div><div><label>体重</label><select id="pWeight"></select></div><div><label>性格</label><select id="pPersonality"></select></div></div><div id="personalityText" class="info-strip"></div></div><div class="card budget-card"><div class="budget-head"><span>BUILD BUDGET</span><b id="budgetText">0 / 36</b></div><div class="budget-track"><i id="budgetFill"></i></div><p>11项可选能力，已删除组织；3V3中的传球阅读按位置与控球自动派生。</p></div><div id="skillBuilder" class="skill-list"></div><div id="buildPreview" class="card"></div><button id="lockBuildBtn" class="primary">锁定球员并生成本次参赛名单</button></section>
     <section id="screen-multi" class="screen"><div class="screen-title"><button class="back-btn" data-back>←</button><div><span>MULTIPLAYER</span><h2>导入朋友</h2></div></div><div class="card"><h3>你的球员</h3><div id="multiSelf"></div><button id="multiBuildBtn" class="secondary">创建 / 修改我的球员</button></div><div class="card"><h3>朋友角色码</h3><textarea id="friendCode" placeholder="粘贴 SK5-... 角色码"></textarea><button id="loadFriendBtn" class="secondary">读取朋友角色</button><div id="friendPreview"></div></div><div class="card"><h3>共同赛事码</h3><p class="muted">用于固定本次16人球员池和每年的抽签。双方使用相同赛事码与双方角色码时，初始世界一致。</p><input id="sharedSeed" maxlength="24" placeholder="例如 STREET-0721"><button id="randomSeedBtn" class="secondary">随机生成</button></div><button id="startMultiBtn" class="primary">锁定名单并开始</button></section>
     <section id="screen-field" class="screen"><div class="screen-title"><button class="back-btn" data-back>←</button><div><span>CAREER FIELD</span><h2>本次固定参赛名单</h2></div></div><div class="card highlight"><p>以下16人一旦确认，本次时间线不再变化。每一年只重新抽签，不重新抽参赛者。</p></div><div class="card"><div class="title-row"><h3>本次入选16人</h3><span id="fieldSeedLabel" class="pill"></span></div><div id="selectedField" class="roster-grid"></div></div><div class="card"><details><summary>查看完整候选球员池</summary><div id="candidatePool" class="candidate-list"></div></details></div><div id="playerCodeBox" class="card hidden"></div><button id="startCareerBtn" class="primary">进入18岁 · 第1届路人王</button></section>
@@ -29,5 +29,5 @@
   <footer>架空篮球游戏 · 非官方 NBA 产品。涉及争议动作、冲突和对白均为游戏化虚构事件。</footer>
 </div>
 <div id="toast" class="toast hidden"></div>
-<script src="data.js?b=20260819-1017"></script><script src="v5-data.js?b=20260819-1017"></script><script src="v5-core.js?b=20260819-1017"></script><script src="v5-game.js?b=20260819-1017"></script><script src="v5-career.js?b=20260819-1017"></script><script src="v5-ui.js?b=20260819-1017"></script><script src="v52-fix.js?b=20260819-1017"></script><script src="v53-1.js?b=20260819-1017"></script><script src="v53-2.js?b=20260819-1017"></script><script src="v53-3.js?b=20260819-1017"></script><script src="v53-4.js?b=20260819-1017"></script><script src="v54.js?b=20260819-1017"></script>
+<script src="data.js?b=20260819-1029"></script><script src="v5-data.js?b=20260819-1029"></script><script src="v5-core.js?b=20260819-1029"></script><script src="v5-game.js?b=20260819-1029"></script><script src="v5-career.js?b=20260819-1029"></script><script src="v5-ui.js?b=20260819-1029"></script><script src="v52-fix.js?b=20260819-1029"></script><script src="v53-1.js?b=20260819-1029"></script><script src="v53-2.js?b=20260819-1029"></script><script src="v53-3.js?b=20260819-1029"></script><script src="v53-4.js?b=20260819-1029"></script><script src="v541-safe.js?b=20260819-1029"></script>
 </body></html>
